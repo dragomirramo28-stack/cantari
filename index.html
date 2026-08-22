@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cântări Tabără 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --violet:#5B0EBE;
+    --violet-dark:#3B0980;
+    --pink:#FF2E93;
+    --amber:#FFB627;
+    --cyan:#17D7FF;
+    --cream:#FFF6EA;
+    --ink:#1B0B2E;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  .app{
+    min-height:100vh;
+    font-family:'Inter',sans-serif;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255,182,39,0.55), transparent 45%),
+      radial-gradient(circle at 85% 0%, rgba(23,215,255,0.45), transparent 40%),
+      linear-gradient(160deg, var(--violet) 0%, var(--violet-dark) 55%, #24054F 100%);
+    padding:28px 16px 60px;
+    color:var(--ink);
+  }
+  .wrap{
+    max-width:520px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:var(--cream);
+    opacity:.75;
+    text-align:center;
+    margin:0 0 4px;
+  }
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:34px;
+    line-height:1.05;
+    color:#fff;
+    text-align:center;
+    margin:0 0 22px;
+    text-shadow:0 3px 0 rgba(0,0,0,0.15);
+  }
+  h1 span{
+    display:block;
+    font-size:19px;
+    font-weight:500;
+    color:var(--amber);
+    margin-top:4px;
+  }
+  .searchbox{
+    position:sticky;
+    top:12px;
+    z-index:5;
+    background:var(--cream);
+    border-radius:22px;
+    padding:6px 6px 6px 20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.35), 0 0 0 3px rgba(255,255,255,0.15);
+  }
+  .searchbox svg{flex:none;}
+  #search{
+    flex:1;
+    border:none;
+    outline:none;
+    background:transparent;
+    font-family:'Inter',sans-serif;
+    font-size:18px;
+    font-weight:600;
+    color:var(--ink);
+    padding:14px 0;
+  }
+  #search::placeholder{color:#9a8fae; font-weight:500;}
+  #clearBtn{
+    flex:none;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:none;
+    background:var(--violet);
+    color:#fff;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+  }
+  #clearBtn.show{display:flex;}
+  .status{
+    text-align:center;
+    color:var(--cream);
+    font-size:13px;
+    font-weight:600;
+    opacity:.85;
+    margin:14px 0 10px;
+  }
+  .nowsinging{
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--amber);
+    color:#4A1B0C;
+    border-radius:16px;
+    padding:12px 16px;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    margin-bottom:14px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  }
+  .nowsinging.show{display:flex;}
+  .nowsinging button{
+    border:none;
+    background:rgba(0,0,0,0.12);
+    color:inherit;
+    border-radius:10px;
+    padding:6px 10px;
+    font-family:inherit;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .song{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--cream);
+    border-radius:16px;
+    padding:12px 14px;
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+    box-shadow:0 4px 10px rgba(0,0,0,0.18);
+    border:3px solid transparent;
+  }
+  .song:active{transform:scale(0.98);}
+  .song.selected{
+    border-color:var(--amber);
+    box-shadow:0 6px 18px rgba(0,0,0,0.3);
+  }
+  .badge{
+    flex:none;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:#fff;
+  }
+  .title{
+    font-size:16px;
+    font-weight:600;
+    color:var(--ink);
+    line-height:1.3;
+    flex:1;
+  }
+  .actions{
+    flex:none;
+    display:flex;
+    gap:10px;
+  }
+  .actionCol{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+  }
+  .actionLabel{
+    font-size:10px;
+    font-weight:600;
+    color:#7a6f8c;
+    line-height:1;
+  }
+  .listenBtn{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:none;
+    background:var(--violet);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    box-shadow:0 3px 8px rgba(0,0,0,0.25);
+  }
+  .listenBtn:active{transform:scale(0.92);}
+  .lyricsBtn{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:none;
+    background:var(--pink);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    box-shadow:0 3px 8px rgba(0,0,0,0.25);
+  }
+  .lyricsBtn:active{transform:scale(0.92);}
+  .pptBtn{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:none;
+    background:var(--amber);
+    color:#4A1B0C;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    box-shadow:0 3px 8px rgba(0,0,0,0.25);
+  }
+  .pptBtn:active{transform:scale(0.92);}
+  .title mark{
+    background:var(--amber);
+    color:#4A1B0C;
+    border-radius:4px;
+    padding:0 2px;
+  }
+  .empty{
+    text-align:center;
+    color:var(--cream);
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    font-size:17px;
+    padding:40px 20px;
+    opacity:.9;
+  }
+  .empty small{
+    display:block;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    font-size:13px;
+    margin-top:6px;
+    opacity:.75;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="wrap">
+    <p class="eyebrow">Biserica Cetatea</p>
+    <h1>Cântări Tabără 2026<span>caută o cântare din listă</span></h1>
+
+    <div class="searchbox">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9a8fae" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Scrie primele litere..." autocomplete="off" />
+      <button id="clearBtn" aria-label="Șterge">✕</button>
+    </div>
+
+    <div id="nowSinging" class="nowsinging">
+      <span id="nowSingingText"></span>
+      <button id="nowSingingClear">Oprește</button>
+    </div>
+
+    <p class="status" id="status"></p>
+
+    <ul class="list" id="list"></ul>
+  </div>
+</div>
+
+<script>
+const songs = [
+  "Voi înălța numele Tău",
+  "Domnul minunilor",
+  "Suflă un duh nou de viață",
+  "Tu îmi dai curaj",
+  "Slava onoare",
+  "Un nume nou",
+  "Build my life",
+  "Războiul e al Domnului",
+  "Doar Hristos speranța mea",
+  "Living water",
+  "Fii binecuvântat",
+  "Doar un Aleluia",
+  "De n-ai fi Tu de partea noastră",
+  "M-a aflat pe cai străine",
+  "Iubirea Ta",
+  "Tu ești credincios",
+  "Lumina lumii",
+  "Un cântec de laudă",
+  "Zidește in mine",
+  "Tu rămâi sigur",
+  "Only jesus",
+  "Pilda",
+  "Eu de Tine am nevoie",
+  "Dumnezeu e tăria mea",
+  "Trăiesc pentru Tine",
+  "Leul din Iuda",
+  "Biruitor",
+  "Egipt"
+];
+
+const pptOverrides = {
+  "Un cântec de laudă": "https://docs.google.com/presentation/d/147ierDpPuS1MiHk-y5FrfU5hmTqXSpcw/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Tu rămâi sigur": "https://docs.google.com/presentation/d/1AQBRW7qS_6GV4vcHYJ-aj-FIsIJ4LouH/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Voi înălța numele Tău": "https://docs.google.com/presentation/d/1RJA8bTNetBDCb-8O54XbXYO30AANJWOZ/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Un nume nou": "https://docs.google.com/presentation/d/1UVBdrMZ7tq5GTu_vZXhEGKYog8DfdBBa/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Only jesus": "https://docs.google.com/presentation/d/1KF8ZnU4pTmP532Yqk6umuro87x-dELvB/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Egipt": "https://docs.google.com/presentation/d/1EnAHUaiozwRRxflaD-VjGxD6a0ghczM3/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Doar Hristos speranța mea": "https://docs.google.com/presentation/d/1JJ1-7_tMO5QgPXAfUz9ubmHd2QRfX73C/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Slava onoare": "https://docs.google.com/presentation/d/1OrdXDwk2O_OA_M5EOPw12zf4wQrW-wfK/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Eu de Tine am nevoie": "https://docs.google.com/presentation/d/17-rltuITkWdGiwKOudaf06fVStdy01go/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Leul din Iuda": "https://docs.google.com/presentation/d/1wd-X09xexdzJZj5w9BMfjaIa723DZ-Y6/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Biruitor": "https://docs.google.com/presentation/d/1Qk4uiK9CqUp-3Ipnua9cQQvlU85nOXP3/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Domnul minunilor": "https://docs.google.com/presentation/d/1jNSj335wPXON3UdgVgT_C7Hl2TkNkXlc/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Suflă un duh nou de viață": "https://docs.google.com/presentation/d/1pl_j_RqjHHVoHhXvTlwFJYTq9Wyxp0Pn/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Tu îmi dai curaj": "https://docs.google.com/presentation/d/1CHTrhC-XPEUX032-uw5qyKCN8ELC4aXI/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Build my life": "https://docs.google.com/presentation/d/1sd65nd2edaz3p2Tp6sF0XWCuYAhslBWp/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Trăiesc pentru Tine": "https://docs.google.com/presentation/d/1FgKPD8FxTBo_cMPelzcfDVEs6aBmTlpg/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Dumnezeu e tăria mea": "https://docs.google.com/presentation/d/18heOypxS16aXVx8s8tLB6LgISv06lgxI/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Pilda": "https://docs.google.com/presentation/d/1HGNytbajYpFazkYDhwn08nBM-Zuwmnz9/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Tu ești credincios": "https://docs.google.com/presentation/d/10QcTTq8T7M7P11CScWfVuLggOts9ZqBL/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Iubirea Ta": "https://docs.google.com/presentation/d/1tVYNB7gItNeR467YOMpoY3w3xycgqiTm/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Lumina lumii": "https://docs.google.com/presentation/d/1VuUnuWnov6mnKOKVibz0mn9bjgptMMIO/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Living water": "https://docs.google.com/presentation/d/1OuxOiSku2Jxqv6EcpcZeRpp_Ziuulqa0/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Războiul e al Domnului": "https://docs.google.com/presentation/d/170Pqk2nOd4Uvl_ivS1PwCtzBlg76izv5/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "M-a aflat pe cai străine": "https://docs.google.com/presentation/d/1LKbRp5LnnQcxsa15OT44bhKWzaBAOQ7K/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Zidește in mine": "https://docs.google.com/presentation/d/1F7Mi2mhFdr_0M7DN28pmcpjljrvQaQWT/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Fii binecuvântat": "https://docs.google.com/presentation/d/1l5zaDn6mHaEG6_D69fmWFMONJWSLdQG8/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "Doar un Aleluia": "https://docs.google.com/presentation/d/1pn_h-58QCUZg1n1jTEXmPVvao5Yn4r2c/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true",
+  "De n-ai fi Tu de partea noastră": "https://docs.google.com/presentation/d/1s1-aJhMtcb92PC2EogjWk9sPC3lGk_Gc/edit?usp=sharing&ouid=102507563087202337759&rtpof=true&sd=true"
+};
+
+const listenOverrides = {
+  "Voi înălța numele Tău": "https://www.youtube.com/watch?v=3wOaYQwkZP0&list=RD3wOaYQwkZP0&start_radio=1",
+  "Domnul minunilor": "https://www.youtube.com/watch?v=muF58WFsXMw&list=RDmuF58WFsXMw&start_radio=1",
+  "Suflă un duh nou de viață": "https://www.youtube.com/watch?v=AzyNLIewb80&list=RDAzyNLIewb80&start_radio=1",
+  "Tu îmi dai curaj": "https://www.youtube.com/watch?v=Iz9bFbEZtrE",
+  "Slava onoare": "https://www.youtube.com/watch?v=JkceihOgSKk",
+  "Un nume nou": "https://www.youtube.com/watch?v=irClmdikVAs&list=RDirClmdikVAs&start_radio=1",
+  "Build my life": "https://www.youtube.com/watch?v=bfSCPcDBI5A&list=RDbfSCPcDBI5A&start_radio=1",
+  "Războiul e al Domnului": "https://www.youtube.com/watch?v=p3jaWsh8Kv8&list=RDp3jaWsh8Kv8&start_radio=1",
+  "Doar Hristos speranța mea": "https://www.youtube.com/watch?v=LVLR_M1wi5o&list=RDLVLR_M1wi5o&start_radio=1",
+  "Living water": "https://www.youtube.com/watch?v=k1SZeDL_O4o&list=RDk1SZeDL_O4o&start_radio=1",
+  "Fii binecuvântat": "https://www.youtube.com/watch?v=Y_sLEumRxi8&list=RDY_sLEumRxi8&start_radio=1",
+  "Doar un Aleluia": "https://www.youtube.com/watch?v=V8DCPrRShkA&list=RDV8DCPrRShkA&start_radio=1",
+  "De n-ai fi Tu de partea noastră": "https://www.youtube.com/watch?v=yfGW0AbTMR4&list=RDyfGW0AbTMR4&start_radio=1",
+  "Iubirea Ta": "https://www.youtube.com/watch?v=x0AwI5pzD8o&list=RDx0AwI5pzD8o&start_radio=1",
+  "Tu ești credincios": "https://www.youtube.com/watch?v=d_Y6Saz5iGo&list=RDd_Y6Saz5iGo&start_radio=1",
+  "Un cântec de laudă": "https://www.youtube.com/watch?v=P_wh3TbN18o&list=RDP_wh3TbN18o&start_radio=1",
+  "Tu rămâi sigur": "https://www.youtube.com/watch?v=Nj1uBWe1g8w",
+  "Only jesus": "https://www.youtube.com/watch?v=4ZDthue6C0E&list=RD4ZDthue6C0E&start_radio=1",
+  "Pilda": "https://www.youtube.com/watch?v=dzgqgm1yAW0&list=RDdzgqgm1yAW0&start_radio=1",
+  "Eu de Tine am nevoie": "https://www.youtube.com/watch?v=W3JaFrwIo_c",
+  "Trăiesc pentru Tine": "https://www.youtube.com/watch?v=vC16zu50Izc&list=RDvC16zu50Izc&start_radio=1",
+  "Leul din Iuda": "https://www.youtube.com/watch?v=2LVJcZ9Q90E&list=RD2LVJcZ9Q90E&start_radio=1",
+  "Biruitor": "https://www.youtube.com/watch?v=SaPgCJ-F7Mw&list=RDSaPgCJ-F7Mw&start_radio=1",
+  "Egipt": "https://www.youtube.com/watch?v=leBtNWZhF1E&list=RDleBtNWZhF1E&start_radio=1",
+  "Lumina lumii": "https://www.youtube.com/watch?v=naA0QWDN6wU&list=RDnaA0QWDN6wU&start_radio=1",
+  "M-a aflat pe cai străine": "https://www.youtube.com/watch?v=TVsuy9DB4EI&list=RDTVsuy9DB4EI&start_radio=1",
+  "Zidește in mine": "https://www.youtube.com/watch?v=5mbNpVwDHIM&list=RD5mbNpVwDHIM&start_radio=1"
+};
+
+const lyricsOverrides = {
+  "Suflă un duh nou de viață": "https://www.musixmatch.com/lyrics/Harvest-Arad/Inima-Ta",
+  "Tu îmi dai curaj": "https://www.resursecrestine.ro/cantece/166671/tu-imi-dai-curaj",
+  "Domnul minunilor": "https://www.resursecrestine.ro/cantece/236347/domnul-minunilor",
+  "Voi înălța numele Tău": "https://www.resursecrestine.ro/cantece/69330/voi-inalta-numele-tau",
+  "Slava onoare": "https://www.resursecrestine.ro/cantece/4859/cinste-onoare-glorie-splendoare",
+  "Un nume nou": "https://www.resursecrestine.ro/cantece/230422/un-nume-nou-new-name-written-down-in-glory",
+  "Build my life": "https://www.resursecrestine.ro/cantece/189324/vrednic-de-lauda-ce-o-pot-canta",
+  "Războiul e al Domnului": "https://www.resursecrestine.ro/cantece/202119/cand-lupta-se-apropie-te-rog-nu-uita",
+  "Doar Hristos speranța mea": "https://www.resursecrestine.ro/cantece/199137/doar-cristos-speranta-mea",
+  "Living water": "https://www.resursecrestine.ro/cantece/320706/living-water-bbso",
+  "Fii binecuvântat": "https://www.resursecrestine.ro/cantece/2824/fii-binecuvantat",
+  "Doar un Aleluia": "https://www.resursecrestine.ro/cantece/268276/doar-un-aleluia-gratitude",
+  "De n-ai fi Tu de partea noastră": "https://www.resursecrestine.ro/cantece/6732/de-n-ai-fi-tu-de-partea-noastra",
+  "Iubirea Ta": "https://www.resursecrestine.ro/cantece/197725/iubirea-ta-este-atat-de-mare",
+  "Tu ești credincios": "https://www.resursecrestine.ro/cantece/179311/tu-esti-credincios",
+  "Un cântec de laudă": "https://www.resursecrestine.ro/cantece/62666/un-cantec-de-lauda",
+  "Tu rămâi sigur": "https://www.resursecrestine.ro/cantece/vizualizeaza-resursa/170610",
+  "Only jesus": "https://www.resursecrestine.ro/cantece/230791/only-jesus",
+  "Pilda": "https://www.resursecrestine.ro/cantece/204369/pilda",
+  "Eu de Tine am nevoie": "https://www.resursecrestine.ro/cantece/133941/doamne-vin-si-ngenunchez-eu-de-tine-am-nevoie",
+  "Trăiesc pentru Tine": "https://www.resursecrestine.ro/cantece/197720/traiesc-pentru-tine",
+  "Leul din Iuda": "https://www.resursecrestine.ro/cantece/105829/leul-din-iuda",
+  "Biruitor": "https://www.resursecrestine.ro/cantece/175967/biruitor",
+  "Egipt": "https://www.resursecrestine.ro/cantece/214228/tu-mi-ai-infrant-egiptul",
+  "Lumina lumii": "https://www.resursecrestine.ro/cantece/2848/toata-inchinarea",
+  "M-a aflat pe cai străine": "https://www.resursecrestine.ro/cantece/197722/m-a-aflat-pe-cai-straine-bunul-meu-pastor-isus",
+  "Zidește in mine": "https://www.resursecrestine.ro/cantece/1562/zideste-in-mine"
+};
+
+const colors = ["#5B0EBE","#FF2E93","#FFB627","#17D7FF"];
+const colorText = ["#fff","#fff","#4A1B0C","#0B3A44"];
+
+function normalize(str){
+  return str.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i")
+    .replace(/ș/g,"s").replace(/ş/g,"s").replace(/ț/g,"t").replace(/ţ/g,"t");
+}
+
+const items = songs.map((title, i) => ({ title, num: i+1, norm: normalize(title) }));
+
+const listEl = document.getElementById('list');
+const searchEl = document.getElementById('search');
+const statusEl = document.getElementById('status');
+const clearBtn = document.getElementById('clearBtn');
+const nowSinging = document.getElementById('nowSinging');
+const nowSingingText = document.getElementById('nowSingingText');
+const nowSingingClear = document.getElementById('nowSingingClear');
+
+let selectedIndex = null;
+
+function highlight(title, query){
+  if(!query) return title;
+  const norm = normalize(title);
+  const idx = norm.indexOf(query);
+  if(idx === -1) return title;
+  return title.slice(0, idx) + "<mark>" + title.slice(idx, idx+query.length) + "</mark>" + title.slice(idx+query.length);
+}
+
+function render(){
+  const q = normalize(searchEl.value.trim());
+  clearBtn.classList.toggle('show', q.length > 0);
+
+  let results;
+  if(!q){
+    results = items;
+  } else {
+    const starts = items.filter(it => it.norm.startsWith(q));
+    const contains = items.filter(it => !it.norm.startsWith(q) && it.norm.includes(q));
+    results = [...starts, ...contains];
+  }
+
+  if(q){
+    statusEl.textContent = results.length + (results.length === 1 ? " cântare găsită" : " cântări găsite");
+  } else {
+    statusEl.textContent = songs.length + " de cântări";
+  }
+
+  listEl.innerHTML = "";
+
+  if(results.length === 0){
+    const li = document.createElement('li');
+    li.className = 'empty';
+    li.innerHTML = "Nicio cântare găsită<small>Încearcă alte litere</small>";
+    listEl.appendChild(li);
+    return;
+  }
+
+  results.forEach(it => {
+    const li = document.createElement('li');
+    li.className = 'song' + (it.num === selectedIndex ? ' selected' : '');
+    const c = colors[(it.num-1) % colors.length];
+    const ct = colorText[(it.num-1) % colors.length];
+    const ytUrl = listenOverrides[it.title] || ("https://www.youtube.com/results?search_query=" + encodeURIComponent(it.title + " cantare crestina"));
+    const lyricsUrl = lyricsOverrides[it.title] || ("https://www.google.com/search?q=" + encodeURIComponent("site:resursecrestine.ro " + it.title));
+    const pptUrl = pptOverrides[it.title] || null;
+    li.innerHTML = `
+      <div class="badge" style="background:${c}; color:${ct}">${it.num}</div>
+      <div class="title">${highlight(it.title, q)}</div>
+      <div class="actions">
+        <div class="actionCol">
+          <a class="listenBtn" href="${ytUrl}" target="_blank" rel="noopener" aria-label="Ascultă ${it.title}" onclick="event.stopPropagation()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </a>
+          <span class="actionLabel">Ascultă</span>
+        </div>
+        <div class="actionCol">
+          <a class="lyricsBtn" href="${lyricsUrl}" target="_blank" rel="noopener" aria-label="Versuri ${it.title}" onclick="event.stopPropagation()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </a>
+          <span class="actionLabel">Vezi versurile</span>
+        </div>
+        ${pptUrl ? `
+        <div class="actionCol">
+          <a class="pptBtn" href="${pptUrl}" target="_blank" rel="noopener" aria-label="PPT ${it.title}" onclick="event.stopPropagation()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h4a2 2 0 0 1 0 4H8V8z"/><path d="M8 12v5"/></svg>
+          </a>
+          <span class="actionLabel">PPT</span>
+        </div>` : ''}
+      </div>
+    `;
+    li.addEventListener('click', () => {
+      selectedIndex = (selectedIndex === it.num) ? null : it.num;
+      if(selectedIndex){
+        nowSinging.classList.add('show');
+        nowSingingText.textContent = it.num + ". " + it.title;
+      } else {
+        nowSinging.classList.remove('show');
+      }
+      render();
+    });
+    listEl.appendChild(li);
+  });
+}
+
+searchEl.addEventListener('input', render);
+clearBtn.addEventListener('click', () => {
+  searchEl.value = "";
+  searchEl.focus();
+  render();
+});
+nowSingingClear.addEventListener('click', () => {
+  selectedIndex = null;
+  nowSinging.classList.remove('show');
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
